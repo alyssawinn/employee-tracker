@@ -46,10 +46,70 @@ const updateEmployees = () => {
                 const param = [newDepartment.department];
                 db.query(`INSERT INTO department (name)
                         VALUES (?)`, param, (err, result) => {
-                            console.log(`${param} has been added`);
-                            updateEmployees();
+                            if (err) {
+                                console.log('Department already exists');
+                                updateEmployees();
+                            } else {
+                                console.log(`${param} has been added`);
+                                updateEmployees();
+                            }
                     })
             })
+        } else if (nextAction.starterAction === 'Add a role') {
+            db.query(`SELECT * FROM department`, (err, row) => {
+                if (err) {
+                    console.log(`Error: ${err}`);
+                    updateEmployees();
+                } else {
+                    return inquirer.prompt ([
+                        {
+                            type: 'input',
+                            name: 'title',
+                            message: 'New Role:'
+                        },
+                        {
+                            type: 'input',
+                            name: 'salary',
+                            message: 'Salary:'
+                        },
+                        {
+                            type: 'list',
+                            name: 'department',
+                            choices: function() {
+                                let choiceArray = [];
+                                row.forEach(item => choiceArray.push(item));
+                                return choiceArray;
+                            },
+                            message: 'Department for new role:'
+                        }
+                    ]).then(newRole => {
+                        const param = [newRole.department];
+                        db.query(`SELECT id FROM department WHERE name = ?`, param, (err, row) => {
+                            if (err) {
+                                console.log(`Error: ${err}`);
+                                updateEmployees();
+                            } else {
+                                let departmentId = row[0].id;
+                                const param = [newRole.title, newRole.salary, departmentId];
+                                db.query(`INSERT INTO role (title, salary, department_id)
+                                VALUES (?,?,?)`, param, (err, result) => {
+                                    if (err) {
+                                        console.log('Role may already exist or salary is not a decimal number');
+                                        updateEmployees();
+                                    } else {
+                                        console.log(`The ${newRole.title} role has been added to the ${newRole.department} department`);
+                                        updateEmployees();
+                                    }
+                            })
+                            }
+                        })
+                        
+                         
+                    })
+                }
+                
+            })
+            
         }
     })
 };
