@@ -8,7 +8,7 @@ const updateEmployees = () => {
             type: 'list',
             name: 'starterAction',
             message: 'What would you like to do?',
-            choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role']
+            choices: ['Quit', 'View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role']
         }
     ).then(nextAction => {
         if (nextAction.starterAction === 'View all departments') {
@@ -254,6 +254,9 @@ const updateEmployees = () => {
                 }
             })
             
+        } else {
+            console.log("The employee tracker is now closed. Please type 'node index' to restart.");
+            db.end();
         }
     })
 };
