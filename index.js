@@ -159,7 +159,7 @@ const updateEmployees = () => {
                                     db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id)
                                     VALUES (?,?,?,?)`, param, (err, result) => {
                                         if (err) {
-                                            console.log('Error. Please try again.');
+                                            console.log(`Error: ${err}`);
                                             updateEmployees();
                                         } else {
                                             console.log(`${newEmployee.firstName} ${newEmployee.lastName} has been added`);
@@ -183,7 +183,7 @@ const updateEmployees = () => {
                                     db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id)
                                     VALUES (?,?,?,?)`, param, (err, result) => {
                                         if (err) {
-                                            console.log('');
+                                            console.log(`Error: ${err}`);
                                             updateEmployees();
                                         } else {
                                             console.log(`${newEmployee.firstName} ${newEmployee.lastName} has been added`);
@@ -238,10 +238,9 @@ const updateEmployees = () => {
                                 let roleId = row[0][0].id;
                                 let employeeId = row[1][0].id;
                                 const param = [roleId, employeeId];
-                                console.log(param);
                                 db.query(`UPDATE employee SET role_id = ? WHERE id = ?`, param, (err, result) => {
                                     if (err) {
-                                        console.log('');
+                                        console.log(`Error: ${err}`);
                                         updateEmployees();
                                     } else {
                                         console.log(`${newEmployeeRole.employee}'s role has been changed to ${newEmployeeRole.role}`);
